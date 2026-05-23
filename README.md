@@ -1,6 +1,6 @@
-# Coverlet ✨
+# CoverLetAI ✨
 
-**Coverlet** is an AI-powered cover letter generator designed to bridge the gap between human intent and AI generation. Built as an AI Product Management portfolio project, it focuses on **Human-in-the-Loop (HITL)** iteration, **AI Explainability**, and **Guardrails** rather than just blind generation.
+**CoverLetAI** is an AI-powered cover letter generator designed to bridge the gap between human intent and AI generation. Built as an AI Product Management portfolio project, it focuses on **Human-in-the-Loop (HITL)** iteration, **AI Explainability**, and **Guardrails** rather than just blind generation.
 
 ## 🚀 Key Product Features
 
@@ -11,7 +11,7 @@ Before burning API tokens, the system runs a fast, low-latency classifier to ver
 To build user trust, the AI doesn't just output a cover letter. It streams an **AI Strategy Rationale** alongside the letter, explaining *why* it chose to highlight specific skills from the resume and how it matched the tone of the job description.
 
 ### 🔄 Human-in-the-Loop (HITL) Refinement
-Users are rarely satisfied with the first draft. Instead of starting over, Coverlet features a conversational Refinement UI. Users can give natural language feedback (e.g., *"Make it shorter and don't mention my gap year"*), and the AI will iteratively revise the document while maintaining context.
+Users are rarely satisfied with the first draft. Instead of starting over, CoverLetAI features a conversational Refinement UI. Users can give natural language feedback (e.g., *"Make it shorter and don't mention my gap year"*), and the AI will iteratively revise the document while maintaining context.
 
 ### 📄 Professional Export
 Generated cover letters can be downloaded directly as properly formatted **.docx** files (using `docx` and `file-saver`), allowing users to make final manual tweaks in Microsoft Word or Google Docs before applying.

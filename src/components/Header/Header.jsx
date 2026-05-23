@@ -7,7 +7,7 @@ export default function Header() {
         <div className={styles.logo}>
           <span className={styles.logoIcon}>✦</span>
           <span className={styles.logoText}>
-            CoverCraft <span className={styles.logoAi}>AI</span>
+            CoverLet<span className={styles.logoAi}>AI</span>
           </span>
         </div>
         <nav className={styles.nav}>
