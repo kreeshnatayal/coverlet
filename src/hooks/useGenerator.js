@@ -140,9 +140,12 @@ export function useGenerator() {
       }
 
       const data = await response.json();
-      const content = data?.choices?.[0]?.message?.content;
+      let content = data?.choices?.[0]?.message?.content;
       
       if (!content) throw new Error("No content received");
+      
+      // Clean up markdown formatting if the model still wraps it
+      content = content.replace(/```json\s*/gi, '').replace(/```\s*$/gi, '').trim();
       
       const parsed = JSON.parse(content);
       setIntelligenceData(parsed);

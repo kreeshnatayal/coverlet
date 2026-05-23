@@ -1,7 +1,8 @@
 import styles from './StepPanel.module.css';
 
-export default function StepIntelligence({ status, intelligenceData, onBack, onNext }) {
+export default function StepIntelligence({ status, errorMsg, intelligenceData, onBack, onNext }) {
   const isLoading = status === 'loading';
+  const isError = status === 'error' && errorMsg;
 
   return (
     <div className={styles.panelInner}>
@@ -18,6 +19,11 @@ export default function StepIntelligence({ status, intelligenceData, onBack, onN
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-secondary)' }}>
             <div className={styles.parsingSpinner} style={{ margin: '0 auto 20px auto' }}></div>
             <p>Analyzing company context and recruiter psychology...</p>
+          </div>
+        ) : isError ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.05)', marginTop: '20px' }}>
+            <p style={{ fontWeight: '500', marginBottom: '8px' }}>Analysis Failed</p>
+            <p style={{ fontSize: '14px' }}>{errorMsg}</p>
           </div>
         ) : intelligenceData ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '20px' }}>

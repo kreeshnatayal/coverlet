@@ -94,6 +94,7 @@ export default async function handler(req) {
         max_tokens: body.max_tokens ?? 1500,
         stream: body.stream ?? false,
       };
+      if (body.response_format) payload.response_format = body.response_format;
 
       response = await fetch(GROQ_API_URL, {
         method: 'POST',

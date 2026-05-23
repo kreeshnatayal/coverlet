@@ -68,7 +68,7 @@ export default function Generator() {
             <StepJobDescription jobDesc={jobDesc} onChange={setJobDesc} onNext={handleAnalyzeFit} onBack={() => setStep(1)} />
           )}
           {step === 3 && (
-            <StepIntelligence status={status} intelligenceData={intelligenceData} onBack={() => setStep(2)} onNext={() => setStep(4)} />
+            <StepIntelligence status={status} errorMsg={errorMsg} intelligenceData={intelligenceData} onBack={() => setStep(2)} onNext={() => setStep(4)} />
           )}
           {step === 4 && (
             <StepCustomize settings={settings} onChange={setSettings} onBack={() => setStep(3)} onGenerate={handleGenerate} />
