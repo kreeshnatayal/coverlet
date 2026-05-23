@@ -137,6 +137,11 @@ export function useGenerator() {
       });
       
       const guardData = await guardResponse.json();
+      
+      if (!guardResponse.ok) {
+        throw new Error(guardData.error || `API error ${guardResponse.status}`);
+      }
+      
       const isValid = guardData?.choices?.[0]?.message?.content?.toUpperCase().includes('TRUE');
       
       if (!isValid) {
