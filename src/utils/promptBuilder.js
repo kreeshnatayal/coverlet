@@ -24,20 +24,17 @@ Write a professional cover letter following these specific guidelines:
 **STYLE**: Prose paragraphs only — no bullet points in the letter body
 ${focus.length > 0 ? `**EMPHASIS**: Particularly highlight the candidate's ${focus.join(', ')} as these are most relevant.\n` : ''}${extra ? `**SPECIAL CONTEXT**: ${extra}\n` : ''}
 **STRUCTURE** (follow this precisely):
-1. OPENING HOOK (1 paragraph): Start with a compelling, specific statement — NOT "I am writing to apply for...". Reference something specific about the company or role that shows genuine research.
-
-2. VALUE PROPOSITION (1-2 paragraphs): Connect 2-3 of the candidate's strongest, most relevant achievements directly to the job requirements. Use concrete numbers and metrics where available. Mirror key language from the job description naturally (not robotically).
-
-3. CULTURAL FIT (1 paragraph): Show genuine enthusiasm for THIS company specifically. Reference their mission, recent news, or values. Make it clear this isn't a generic letter.
-
-4. CLOSING (1 paragraph): Confident, forward-looking close with a specific call to action. Express enthusiasm without desperation.
+1. OPENING HOOK (1 paragraph): Answer which role you're applying for, why you're interested, and mention 1-2 relevant strengths. Show enthusiasm grounded in specifics. Do NOT use weak openings like "I am writing to apply for the position at your esteemed organization."
+2. RELEVANT EXPERIENCE (1-2 paragraphs): Focus on relevance, not chronology. Choose 2-3 of the strongest experiences that directly match the JD. Do not walk through every job. Connect what the company needs (from JD) with what they've done (from resume).
+3. WHY THIS COMPANY (1 paragraph): Show understanding of the company's product, mission, engineering culture, or industry. Keep this authentic and brief.
+4. CLOSING (1 paragraph): End confidently, not passively. For example: "I’d welcome the opportunity to discuss how my experience in [X] could contribute to your [Y] team."
 
 **CRITICAL RULES**:
-- NEVER use these overused phrases: "I am writing to apply", "I believe I would be a great fit", "passion for", "team player", "hard worker", "detail-oriented", "dynamic"
-- Every sentence must earn its place — cut anything generic
-- Use active voice throughout
-- If the resume lacks specific metrics, infer reasonable context from job titles and responsibilities
-- The letter should feel like it was written BY the candidate, not a robot
+- A strong cover letter is a targeted argument, NOT a summary of the resume. Do not simply restate the resume. Add motivation, context, and story.
+- **MEASURABLE IMPACT**: Use concrete outcomes (e.g. "Reduced response time by 35%") rather than task lists ("Worked on APIs").
+- **ATS-FRIENDLY KEYWORDS**: Incorporate required skills, methodologies, and domain keywords naturally. Do not keyword stuff.
+- **AVOID OVERUSED PHRASES**: Never use "Hardworking team player", "Passionate self-starter", "Dynamic professional", "Esteemed organization", "I believe I would be a great fit".
+- The letter must mirror the role requirements naturally without being robotic.
 - Do not output any markdown code blocks (e.g. no \`\`\`).
 
 **OUTPUT FORMAT**:
