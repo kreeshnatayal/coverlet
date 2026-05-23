@@ -32,13 +32,18 @@ ${focus.length > 0 ? `**EMPHASIS**: Particularly highlight the candidate's ${foc
 **CRITICAL RULES**:
 - A strong cover letter is a targeted argument, NOT a summary of the resume. Do not simply restate the resume. Add motivation, context, and story.
 - **MEASURABLE IMPACT**: Use concrete outcomes (e.g. "Reduced response time by 35%") rather than task lists ("Worked on APIs").
+- **NO HALLUCINATIONS**: NEVER invent numbers, metrics, titles, or experiences. Rely strictly on the provided resume. If the resume lacks metrics, focus on qualitative impact without fabricating numbers.
 - **ATS-FRIENDLY KEYWORDS**: Incorporate required skills, methodologies, and domain keywords naturally. Do not keyword stuff.
 - **AVOID OVERUSED PHRASES**: Never use "Hardworking team player", "Passionate self-starter", "Dynamic professional", "Esteemed organization", "I believe I would be a great fit".
 - The letter must mirror the role requirements naturally without being robotic.
 - Do not output any markdown code blocks (e.g. no \`\`\`).
 
 **OUTPUT FORMAT**:
-You must output your response using EXACTLY these two XML tags in order:
+You must output your response using EXACTLY these three XML tags in order:
+
+<SCORE>
+{"matchPercentage": 85, "matchedKeywords": ["keyword1", "keyword2", "keyword3"]}
+</SCORE>
 
 <RATIONALE>
 Write 2-3 short, bulleted sentences explaining your strategy. Why did you choose to emphasize specific skills? How did you adapt to the requested tone? This builds trust with the user.

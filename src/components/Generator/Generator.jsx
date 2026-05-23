@@ -8,6 +8,7 @@ import { useGenerator } from '../../hooks/useGenerator';
 import styles from './Generator.module.css';
 
 const DEFAULT_SETTINGS = {
+  model: 'llama-3.3-70b-versatile',
   tone: 'professional',
   length: 'standard',
   focus: [],
@@ -20,7 +21,7 @@ export default function Generator() {
   const [jobDesc, setJobDesc] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
-  const { status, outputText, rationaleText, errorMsg, loadingStep, generate, refine, LOADING_STEPS } = useGenerator();
+  const { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, generate, refine, LOADING_STEPS } = useGenerator();
 
   let highestUnlocked = 1;
   if (resume && resume.length >= 30) highestUnlocked = 2;
@@ -65,6 +66,7 @@ export default function Generator() {
               status={status}
               outputText={outputText}
               rationaleText={rationaleText}
+              matchScore={matchScore}
               errorMsg={errorMsg}
               loadingStep={loadingStep}
               LOADING_STEPS={LOADING_STEPS}

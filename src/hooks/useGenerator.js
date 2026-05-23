@@ -15,13 +15,14 @@ export function useGenerator() {
   const [status, setStatus]           = useState('idle'); // idle | loading | done | error
   const [outputText, setOutputText]   = useState('');
   const [rationaleText, setRationaleText] = useState('');
+  const [matchScore, setMatchScore]   = useState(null);
   const [errorMsg, setErrorMsg]       = useState('');
   const [loadingStep, setLoadingStep] = useState(0);     // 0–3
   
   // Maintain conversation history for iterative refinement
   const messagesRef = useRef([]);
 
-  const streamResponse = async (stepTimers) => {
+  const streamResponse = async (stepTimers, selectedModel = 'llama-3.3-70b-versatile') => {
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -29,6 +30,7 @@ export function useGenerator() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          model: selectedModel,
           messages: messagesRef.current,
           temperature: 0.7,
           max_tokens: 1500,
@@ -72,6 +74,14 @@ export function useGenerator() {
             fullText += delta;
             
             // Robust streaming XML tag parser
+            const scoreMatch = fullText.match(/<SCORE>([\s\S]*?)(<\/SCORE>|$)/i);
+            if (scoreMatch) {
+              try {
+                 const scoreJson = JSON.parse(scoreMatch[1].trim());
+                 setMatchScore(scoreJson);
+              } catch { /* Wait until JSON is fully streamed */ }
+            }
+
             const rationaleMatch = fullText.match(/<RATIONALE>([\s\S]*?)(<\/RATIONALE>|$)/i);
             if (rationaleMatch) {
               setRationaleText(rationaleMatch[1].trim());
@@ -81,7 +91,7 @@ export function useGenerator() {
             if (letterMatch && letterMatch[1].trim().length > 0) {
               setOutputText(letterMatch[1].trim());
             } else {
-              const cleanedText = fullText.replace(/<RATIONALE>[\s\S]*?<\/RATIONALE>/i, '').trim();
+              const cleanedText = fullText.replace(/<SCORE>[\s\S]*?<\/SCORE>/i, '').replace(/<RATIONALE>[\s\S]*?<\/RATIONALE>/i, '').trim();
               setOutputText(cleanedText || fullText);
             }
           } catch { /* skip parsing errors for chunks */ }
@@ -98,10 +108,11 @@ export function useGenerator() {
     }
   };
 
-  const generate = useCallback(async ({ resume, jobDesc, tone, focus, length, extra }) => {
+  const generate = useCallback(async ({ resume, jobDesc, tone, focus, length, extra, model = 'llama-3.3-70b-versatile' }) => {
     setStatus('loading');
     setOutputText('');
     setRationaleText('');
+    setMatchScore(null);
     setErrorMsg('');
     setLoadingStep(0);
     messagesRef.current = [];
@@ -118,6 +129,7 @@ export function useGenerator() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          model: 'llama-3.1-8b-instant', // Fast model for guardrails
           messages: [{ role: 'user', content: guardrailPrompt }],
           temperature: 0,
           max_tokens: 10,
@@ -138,7 +150,7 @@ export function useGenerator() {
       const prompt = buildPrompt({ resume, jobDesc, tone, focus, length, extra });
       messagesRef.current = [{ role: 'user', content: prompt }];
       
-      await streamResponse(stepTimers);
+      await streamResponse(stepTimers, model);
 
     } catch (err) {
       stepTimers.forEach(clearTimeout);
@@ -154,8 +166,8 @@ export function useGenerator() {
     const refinePrompt = `The user has requested the following change to the cover letter: "${feedback}". \n\nPlease rewrite the letter based on this feedback. Output exactly the same XML tags as before: <RATIONALE> explaining how you addressed their feedback, followed by <LETTER> with the new text.`;
     
     messagesRef.current.push({ role: 'user', content: refinePrompt });
-    await streamResponse(null);
+    await streamResponse(null, 'llama-3.3-70b-versatile'); // Keep using the big model for refinement
   }, []);
 
-  return { status, outputText, rationaleText, errorMsg, loadingStep, generate, refine, LOADING_STEPS };
+  return { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, generate, refine, LOADING_STEPS };
 }

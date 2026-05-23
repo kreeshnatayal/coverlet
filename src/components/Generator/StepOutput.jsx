@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './StepPanel.module.css';
 
-export default function StepOutput({ status, outputText, rationaleText, errorMsg, loadingStep, LOADING_STEPS, onRegenerate, onRefine, onBack }) {
+export default function StepOutput({ status, outputText, rationaleText, matchScore, errorMsg, loadingStep, LOADING_STEPS, onRegenerate, onRefine, onBack }) {
   const [copied, setCopied]     = useState(false);
   const [refineInput, setRefineInput] = useState('');
 
@@ -41,6 +41,25 @@ export default function StepOutput({ status, outputText, rationaleText, errorMsg
     if (!refineInput.trim()) return;
     onRefine(refineInput);
     setRefineInput('');
+  };
+
+  const renderHighlightedText = (text) => {
+    if (!text) return null;
+    const lines = text.split('\n');
+    return lines.map((line, i) => {
+      // Split by common numeric patterns: digits, percentages, $ amounts, 10+, 50K
+      const parts = line.split(/(\$?\d+(?:\.\d+)?%?(?:k|m|b)?|\d+\+?)/i);
+      return (
+        <div key={i} style={{ minHeight: '1.5em' }}>
+          {parts.map((part, j) => {
+            if (/^(\$?\d+(?:\.\d+)?%?(?:k|m|b)?|\d+\+?)$/i.test(part)) {
+              return <mark key={j} className={styles.highlightNumber} title="AI-PM Trust & Verify: Please verify this metric is accurate to your resume">{part}</mark>;
+            }
+            return part;
+          })}
+        </div>
+      );
+    });
   };
 
   return (
@@ -99,7 +118,7 @@ export default function StepOutput({ status, outputText, rationaleText, errorMsg
           <div className={styles.outputBodyLayout}>
             <div className={styles.outputTextWrapper}>
               <div className={styles.outputText}>
-                {outputText}
+                {renderHighlightedText(outputText)}
                 {status === 'loading' && <span className={styles.cursor}></span>}
               </div>
               
@@ -122,6 +141,21 @@ export default function StepOutput({ status, outputText, rationaleText, errorMsg
 
             {/* EXPLAINABILITY: Strategy Rationale */}
             <div className={styles.sidebar}>
+              {/* EVALUATION: AI Match Score */}
+              {matchScore && (
+                <div className={styles.rationaleCard} style={{ marginBottom: '16px' }}>
+                  <div className={styles.rationaleHeader}>AI Evaluation Match Score</div>
+                  <div className={styles.rationaleBody}>
+                    <div style={{ fontSize: '24px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '8px' }}>
+                      {matchScore.matchPercentage}% Match
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                      <strong>Integrated Keywords:</strong> {matchScore.matchedKeywords?.join(', ')}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className={styles.rationaleCard}>
                 <div className={styles.rationaleHeader}>AI Strategy Rationale</div>
                 <div className={styles.rationaleBody}>

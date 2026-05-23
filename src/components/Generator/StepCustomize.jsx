@@ -40,6 +40,30 @@ export default function StepCustomize({ settings, onChange, onBack, onGenerate }
           </div>
         </div>
 
+        {/* MODEL */}
+        <div className={styles.customSection}>
+          <label className={styles.customLabel}>
+            Model Strategy
+            <span className={styles.labelHint}>Balance between logic depth and generation speed</span>
+          </label>
+          <div className={styles.toneGrid}>
+            <button
+              className={`${styles.toneBtn} ${settings.model === 'llama-3.3-70b-versatile' ? styles.toneBtnActive : ''}`}
+              onClick={() => onChange({ ...settings, model: 'llama-3.3-70b-versatile' })}
+            >
+              <span className={styles.toneName}>Deep Strategy</span>
+              <span className={styles.toneDesc}>Highest quality, standard speed</span>
+            </button>
+            <button
+              className={`${styles.toneBtn} ${settings.model === 'llama-3.1-8b-instant' ? styles.toneBtnActive : ''}`}
+              onClick={() => onChange({ ...settings, model: 'llama-3.1-8b-instant' })}
+            >
+              <span className={styles.toneName}>Fast Draft</span>
+              <span className={styles.toneDesc}>Ultra-fast speed, good quality</span>
+            </button>
+          </div>
+        </div>
+
         {/* TONE */}
         <div className={styles.customSection}>
           <label className={styles.customLabel}>

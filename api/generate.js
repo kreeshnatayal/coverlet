@@ -67,28 +67,59 @@ export default async function handler(req) {
        return new Response(JSON.stringify({ error: 'Invalid payload' }), { status: 400 });
     }
 
-    const payload = {
-      model: GROQ_MODEL,
-      messages: body.messages,
-      temperature: body.temperature ?? 0.7,
-      max_tokens: body.max_tokens ?? 1500,
-      stream: body.stream ?? false,
-    };
+    // Intelligent Waterfall Fallback Strategy
+    const requestedModel = body.model || 'llama-3.3-70b-versatile';
+    const fallbackModels = [
+      requestedModel,
+      'llama-3.1-8b-instant',
+      'mixtral-8x7b-32768',
+      'gemma2-9b-it'
+    ];
 
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    // Remove duplicates just in case the requested model is already in the fallback list
+    const modelsToTry = [...new Set(fallbackModels)];
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+    let response = null;
+    let lastError = null;
+
+    for (const model of modelsToTry) {
+      const payload = {
+        model: model,
+        messages: body.messages,
+        temperature: body.temperature ?? 0.7,
+        max_tokens: body.max_tokens ?? 1500,
+        stream: body.stream ?? false,
+      };
+
+      response = await fetch(GROQ_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        break; // Success! Break out of the fallback loop
+      }
+
+      if (response.status === 429) {
+        // Rate limit hit. Catch it and let the loop try the next model.
+        console.warn(`[Waterfall] Groq Rate Limit (429) hit for model ${model}. Falling back...`);
+        lastError = response;
+        continue; 
+      }
+
+      // If it's a 400 Bad Request or something else, don't fallback, just return it.
+      break; 
+    }
+
+    if (!response || !response.ok) {
+      const errorData = await (response || lastError).json().catch(() => ({}));
       return new Response(
-        JSON.stringify({ error: errorData?.error?.message || `Groq API Error: ${response.status}` }),
-        { status: response.status, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: errorData?.error?.message || `Groq API Error: ${(response || lastError).status}` }),
+        { status: (response || lastError).status, headers: { 'Content-Type': 'application/json' } }
       );
     }
 

@@ -420,6 +420,18 @@
   animation: blink 1s step-end infinite;
   vertical-align: text-bottom;
 }
+.highlightNumber {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: var(--accent-amber);
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: help;
+  transition: background-color var(--transition-fast);
+}
+.highlightNumber:hover {
+  background-color: rgba(245, 158, 11, 0.35);
+}
 
 .feedbackRow {
   display: flex; align-items: center; gap: 16px;
