@@ -3,7 +3,7 @@ import QualityMeter from './QualityMeter';
 import styles from './StepPanel.module.css';
 
 const TIPS = [
-  { title: 'Copy the full posting', desc: 'Don\'t summarize — paste everything including "About us" sections for tone matching.' },
+  { title: 'Copy the full posting', desc: 'Don\'t summarize - paste everything including "About us" sections for tone matching.' },
   { title: 'Include the company name', desc: 'The AI personalizes references to the company culture and mission.' },
   { title: 'Note the seniority level', desc: 'Entry-level vs. Director roles require very different tones and emphasis.' },
   { title: 'Include "nice-to-haves"', desc: 'These are opportunities to stand out if you have matching experience.' },

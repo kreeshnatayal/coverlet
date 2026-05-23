@@ -20,8 +20,8 @@ export default function Hero() {
         </h1>
 
         <p className={styles.subtitle}>
-          Paste your resume and any job description. Our AI crafts a hyper-personalized
-          cover letter that speaks the hiring manager's language — in under 10 seconds.
+          Paste your resume and any job description. Our AI crafts a hyper-personalized <br/>
+          cover letter that speaks the hiring manager's language - in under 10 seconds.
         </p>
 
         <div className={styles.ctaGroup}>

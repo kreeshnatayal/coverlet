@@ -25,10 +25,10 @@ export function scoreInput(text, type) {
 
 export function getQualityLabel(score) {
   if (score === 0)   return { label: 'Start typing to see quality score', color: 'var(--text-muted)' };
-  if (score < 30)    return { label: 'Too short — add more detail', color: 'var(--text-muted)' };
-  if (score < 60)    return { label: 'Decent — more detail will help', color: 'var(--text-secondary)' };
-  if (score < 85)    return { label: 'Good — the AI has enough to work with', color: 'var(--text-primary)' };
-  return               { label: 'Excellent — highly personalized output expected!', color: 'var(--text-primary)' };
+  if (score < 30)    return { label: 'Too short - add more detail', color: 'var(--text-muted)' };
+  if (score < 60)    return { label: 'Decent - more detail will help', color: 'var(--text-secondary)' };
+  if (score < 85)    return { label: 'Good - the AI has enough to work with', color: 'var(--text-primary)' };
+  return               { label: 'Excellent - highly personalized output expected!', color: 'var(--text-primary)' };
 }
 
 export function getQualityBarColor(score) {

@@ -9,9 +9,9 @@ const TONES = [
 ];
 
 const LENGTHS = [
-  { id: 'concise',  label: 'Concise',  hint: '~200 words — punchy & direct' },
-  { id: 'standard', label: 'Standard', hint: '~350 words — balanced & thorough' },
-  { id: 'detailed', label: 'Detailed', hint: '~500 words — comprehensive & deep' },
+  { id: 'concise',  label: 'Concise',  hint: '~200 words - punchy & direct' },
+  { id: 'standard', label: 'Standard', hint: '~350 words - balanced & thorough' },
+  { id: 'detailed', label: 'Detailed', hint: '~500 words - comprehensive & deep' },
 ];
 
 const FOCUS_OPTIONS = [
@@ -128,7 +128,7 @@ export default function StepCustomize({ settings, onChange, onBack, onGenerate }
             className={`${styles.textarea} ${styles.smallTextarea}`}
             value={extra}
             onChange={e => onChange({ ...settings, extra: e.target.value })}
-            placeholder="E.g. 'I'm transitioning from finance to tech' or 'I want to emphasize my startup experience' or 'The company just launched a product I admire — mention my excitement about it'"
+            placeholder="E.g. 'I'm transitioning from finance to tech' or 'I want to emphasize my startup experience' or 'The company just launched a product I admire - mention my excitement about it'"
             rows={4}
           />
         </div>

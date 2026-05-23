@@ -8,7 +8,7 @@ const TIPS = [
   { title: 'Include quantified achievements', desc: 'Numbers make you memorable. "Grew revenue by 40%" beats "improved sales."' },
   { title: 'List all relevant skills', desc: 'Include technical tools, methodologies, and domain expertise.' },
   { title: 'Add education & certifications', desc: 'These can be differentiators, especially for competitive roles.' },
-  { title: 'Keep it complete but concise', desc: 'Upload your full resume — the AI will intelligently select what to highlight.' },
+  { title: 'Keep it complete but concise', desc: 'Upload your full resume - the AI will intelligently select what to highlight.' },
 ];
 
 export default function StepResume({ resume, onChange, onNext }) {
@@ -74,7 +74,7 @@ export default function StepResume({ resume, onChange, onNext }) {
           <div className={panelStyles.iconCircle}>01</div>
           <div>
             <h3 className={panelStyles.stepTitle}>Your Resume</h3>
-            <p className={panelStyles.stepDesc}>Upload your resume or paste the text — we'll extract everything automatically.</p>
+            <p className={panelStyles.stepDesc}>Upload your resume or paste the text - we'll extract everything automatically.</p>
           </div>
         </div>
 
@@ -189,7 +189,7 @@ export default function StepResume({ resume, onChange, onNext }) {
               className={panelStyles.textarea}
               value={resume}
               onChange={e => onChange(e.target.value)}
-              placeholder={`Paste your resume text here…\n\nExample:\nJOHN DOE | john@email.com | linkedin.com/in/johndoe\n\nEXPERIENCE\nSenior Product Manager — Google (2021–Present)\n• Led 3 product launches generating $12M ARR\n• Managed cross-functional team of 15 engineers...`}
+              placeholder={`Paste your resume text here…\n\nExample:\nJOHN DOE | john@email.com | linkedin.com/in/johndoe\n\nEXPERIENCE\nSenior Product Manager - Google (2021–Present)\n• Led 3 product launches generating $12M ARR\n• Managed cross-functional team of 15 engineers...`}
               rows={14}
             />
             <div className={panelStyles.charCount}>{resume.length.toLocaleString()} characters</div>

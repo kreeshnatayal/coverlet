@@ -1,4 +1,4 @@
-// fileParser.js — Browser-side resume file parsing
+// fileParser.js - Browser-side resume file parsing
 // Supports PDF, DOCX, and plain TXT
 
 // ─── PDF ─────────────────────────────────────────────────────────

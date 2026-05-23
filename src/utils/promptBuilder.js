@@ -2,10 +2,10 @@
 export function buildPrompt({ resume, jobDesc, tone, focus, length, extra }) {
   const lengthMap = { concise: '150-200', standard: '300-380', detailed: '450-520' };
   const toneMap = {
-    professional: 'formal, polished, and authoritative — suitable for corporate environments',
-    confident: 'bold, assertive, and self-assured — leading with confidence and impact',
-    conversational: 'warm, personable, and approachable — feels like a genuine conversation',
-    creative: 'unique, memorable, and slightly unconventional — designed to stand out',
+    professional: 'formal, polished, and authoritative - suitable for corporate environments',
+    confident: 'bold, assertive, and self-assured - leading with confidence and impact',
+    conversational: 'warm, personable, and approachable - feels like a genuine conversation',
+    creative: 'unique, memorable, and slightly unconventional - designed to stand out',
   };
 
   return `You are a world-class cover letter writer with 15 years of experience helping candidates land jobs at top companies. Your cover letters are known for being highly personalized, compelling, and strategically mapped to job requirements.
@@ -21,7 +21,7 @@ Write a professional cover letter following these specific guidelines:
 
 **TONE**: ${toneMap[tone]}
 **LENGTH**: ${lengthMap[length]} words
-**STYLE**: Prose paragraphs only — no bullet points in the letter body
+**STYLE**: Prose paragraphs only - no bullet points in the letter body
 ${focus.length > 0 ? `**EMPHASIS**: Particularly highlight the candidate's ${focus.join(', ')} as these are most relevant.\n` : ''}${extra ? `**SPECIAL CONTEXT**: ${extra}\n` : ''}
 **STRUCTURE** (follow this precisely):
 1. OPENING HOOK (1 paragraph): Answer which role you're applying for, why you're interested, and mention 1-2 relevant strengths. Show enthusiasm grounded in specifics. Do NOT use weak openings like "I am writing to apply for the position at your esteemed organization."
@@ -72,6 +72,6 @@ export function buildPromptPreview({ tone, focus, length, extra }) {
   text += `LENGTH: Target ${lengthMap[length] || '...'}\n`;
   if (focus.length > 0) text += `EMPHASIZE: ${focus.join(', ')}.\n`;
   if (extra) text += `SPECIAL CONTEXT: ${extra}\n`;
-  text += `\nSTRUCTURE:\n1. Hook — open with a compelling statement\n2. Match — connect 2-3 specific achievements to JD requirements\n3. Why this company — show genuine interest\n4. Call to action — confident close\n\nINSTRUCTIONS:\n- Never use generic phrases like "I am writing to apply"\n- Mirror keywords from the job description naturally\n- Use active voice and concrete metrics where possible\n- Do NOT use bullet points in the letter`;
+  text += `\nSTRUCTURE:\n1. Hook - open with a compelling statement\n2. Match - connect 2-3 specific achievements to JD requirements\n3. Why this company - show genuine interest\n4. Call to action - confident close\n\nINSTRUCTIONS:\n- Never use generic phrases like "I am writing to apply"\n- Mirror keywords from the job description naturally\n- Use active voice and concrete metrics where possible\n- Do NOT use bullet points in the letter`;
   return text;
 }

@@ -43,7 +43,7 @@ export default function Generator() {
       <div className={styles.inner}>
         <div className="section-badge" style={{ marginBottom: '20px' }}>AI Generator</div>
         <h2 className={styles.sectionTitle}>Build your cover letter</h2>
-        <p className={styles.sectionSubtitle}>Follow the guided steps below — each tip helps the AI craft a more targeted letter.</p>
+        <p className={styles.sectionSubtitle}>Follow the guided steps below - each tip helps the AI craft a more targeted letter.</p>
 
         <StepTracker 
           currentStep={step} 
