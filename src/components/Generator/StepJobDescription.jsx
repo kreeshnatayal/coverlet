@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import QualityMeter from './QualityMeter';
+import { scoreInput } from '../../utils/qualityScore';
 import styles from './StepPanel.module.css';
 
 const TIPS = [
@@ -40,9 +41,10 @@ export default function StepJobDescription({ jobDesc, onChange, onNext, onBack }
           <button 
             className="btn-primary" 
             onClick={onNext}
-            disabled={!jobDesc || jobDesc.length < 50}
+            disabled={!jobDesc || scoreInput(jobDesc, 'jd') < 50}
+            style={{ opacity: (!jobDesc || scoreInput(jobDesc, 'jd') < 50) ? 0.5 : 1 }}
           >
-            Continue to Customize
+            {(!jobDesc || scoreInput(jobDesc, 'jd') < 50) ? 'Needs More Detail to Continue' : 'Continue to Customize'}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>

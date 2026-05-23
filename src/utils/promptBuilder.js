@@ -1,5 +1,5 @@
 // Utility: Build the Gemini prompt from user inputs
-export function buildPrompt({ resume, jobDesc, tone, focus, length, extra }) {
+export function buildPrompt({ resume, jobDesc, tone, focus, length, pivotContext, metricContext, companyContext }) {
   const lengthMap = { concise: '150-200', standard: '300-380', detailed: '450-520' };
   const toneMap = {
     professional: 'formal, polished, and authoritative - suitable for corporate environments',
@@ -22,7 +22,10 @@ Write a professional cover letter following these specific guidelines:
 **TONE**: ${toneMap[tone]}
 **LENGTH**: ${lengthMap[length]} words
 **STYLE**: Prose paragraphs only - no bullet points in the letter body
-${focus.length > 0 ? `**EMPHASIS**: Particularly highlight the candidate's ${focus.join(', ')} as these are most relevant.\n` : ''}${extra ? `**SPECIAL CONTEXT**: ${extra}\n` : ''}
+${focus.length > 0 ? `**EMPHASIS**: Particularly highlight the candidate's ${focus.join(', ')} as these are most relevant.\n` : ''}
+${pivotContext ? `**CAREER PIVOT CONTEXT**: ${pivotContext}\n` : ''}
+${metricContext ? `**KEY METRIC TO HIGHLIGHT**: ${metricContext}\n` : ''}
+${companyContext ? `**WHY THIS COMPANY**: ${companyContext}\n` : ''}
 **STRUCTURE** (follow this precisely):
 1. OPENING HOOK (1 paragraph): Answer which role you're applying for, why you're interested, and mention 1-2 relevant strengths. Show enthusiasm grounded in specifics. Do NOT use weak openings like "I am writing to apply for the position at your esteemed organization."
 2. RELEVANT EXPERIENCE (1-2 paragraphs): Focus on relevance, not chronology. Choose 2-3 of the strongest experiences that directly match the JD. Do not walk through every job. Connect what the company needs (from JD) with what they've done (from resume).
@@ -34,12 +37,17 @@ ${focus.length > 0 ? `**EMPHASIS**: Particularly highlight the candidate's ${foc
 - **MEASURABLE IMPACT**: Use concrete outcomes (e.g. "Reduced response time by 35%") rather than task lists ("Worked on APIs").
 - **NO HALLUCINATIONS**: NEVER invent numbers, metrics, titles, or experiences. Rely strictly on the provided resume. If the resume lacks metrics, focus on qualitative impact without fabricating numbers.
 - **ATS-FRIENDLY KEYWORDS**: Incorporate required skills, methodologies, and domain keywords naturally. Do not keyword stuff.
-- **AVOID OVERUSED PHRASES**: Never use "Hardworking team player", "Passionate self-starter", "Dynamic professional", "Esteemed organization", "I believe I would be a great fit".
+- **AVOID OVERUSED PHRASES**: NEVER use words like "passionate", "ninja", "synergy", "highly motivated", "deeply interested", "hardworking team player", "dynamic professional", "esteemed organization", or "I believe I would be a great fit".
 - The letter must mirror the role requirements naturally without being robotic.
 - Do not output any markdown code blocks (e.g. no \`\`\`).
 
 **OUTPUT FORMAT**:
-You must output your response using EXACTLY these three XML tags in order:
+You must output your response using EXACTLY these four XML tags in order. DO NOT skip the ANALYSIS block.
+
+<ANALYSIS>
+Create a 1:1 mapping table of Job Requirement -> Candidate Experience -> Output Sentence Idea.
+This forces you to ground every claim in reality before writing.
+</ANALYSIS>
 
 <SCORE>
 {"matchPercentage": 85, "matchedKeywords": ["keyword1", "keyword2", "keyword3"]}
@@ -57,7 +65,7 @@ Generate your response now:`;
 }
 
 // Utility: Build a human-readable prompt preview for the UI
-export function buildPromptPreview({ tone, focus, length, extra }) {
+export function buildPromptPreview({ tone, focus, length, pivotContext, metricContext, companyContext }) {
   const lengthMap = { concise: '~200 words', standard: '~350 words', detailed: '~500 words' };
   const toneMap = {
     professional: 'formal and authoritative',
@@ -71,7 +79,9 @@ export function buildPromptPreview({ tone, focus, length, extra }) {
   text += `TONE: Write in a ${toneMap[tone] || '...'} style.\n`;
   text += `LENGTH: Target ${lengthMap[length] || '...'}\n`;
   if (focus.length > 0) text += `EMPHASIZE: ${focus.join(', ')}.\n`;
-  if (extra) text += `SPECIAL CONTEXT: ${extra}\n`;
+  if (pivotContext) text += `CAREER PIVOT: ${pivotContext}\n`;
+  if (metricContext) text += `KEY METRIC: ${metricContext}\n`;
+  if (companyContext) text += `WHY THIS COMPANY: ${companyContext}\n`;
   text += `\nSTRUCTURE:\n1. Hook - open with a compelling statement\n2. Match - connect 2-3 specific achievements to JD requirements\n3. Why this company - show genuine interest\n4. Call to action - confident close\n\nINSTRUCTIONS:\n- Never use generic phrases like "I am writing to apply"\n- Mirror keywords from the job description naturally\n- Use active voice and concrete metrics where possible\n- Do NOT use bullet points in the letter`;
   return text;
 }

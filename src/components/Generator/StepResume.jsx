@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { parseResumeFile, ACCEPTED_TYPES, MAX_FILE_SIZE_MB } from '../../utils/fileParser';
+import { scoreInput } from '../../utils/qualityScore';
 import QualityMeter from './QualityMeter';
 import styles from './StepResume.module.css';
 import panelStyles from './StepPanel.module.css';
@@ -201,10 +202,10 @@ export default function StepResume({ resume, onChange, onNext }) {
           <button
             className="btn-primary"
             onClick={onNext}
-            disabled={!resume || resume.length < 30}
-            style={{ opacity: (!resume || resume.length < 30) ? 0.5 : 1 }}
+            disabled={!resume || scoreInput(resume, 'resume') < 50}
+            style={{ opacity: (!resume || scoreInput(resume, 'resume') < 50) ? 0.5 : 1 }}
           >
-            Continue to Job Description
+            {(!resume || scoreInput(resume, 'resume') < 50) ? 'Needs More Detail to Continue' : 'Continue to Job Description'}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>

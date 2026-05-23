@@ -20,14 +20,14 @@ const FOCUS_OPTIONS = [
 ];
 
 export default function StepCustomize({ settings, onChange, onBack, onGenerate }) {
-  const { tone, length, focus, extra } = settings;
+  const { tone, length, focus, pivotContext, metricContext, companyContext } = settings;
 
   const toggleFocus = (f) => {
     const next = focus.includes(f) ? focus.filter(x => x !== f) : [...focus, f];
     onChange({ ...settings, focus: next });
   };
 
-  const promptPreview = buildPromptPreview({ tone, length, focus, extra });
+  const promptPreview = buildPromptPreview({ tone, length, focus, pivotContext, metricContext, companyContext });
 
   return (
     <div className={styles.panelInner}>
@@ -118,19 +118,47 @@ export default function StepCustomize({ settings, onChange, onBack, onGenerate }
           </div>
         </div>
 
-        {/* EXTRA CONTEXT */}
+        {/* EXTRA CONTEXT (Structured) */}
         <div className={styles.customSection}>
           <label className={styles.customLabel}>
-            Additional Context
-            <span className={styles.labelHint}>Anything special the AI should know? (optional)</span>
+            Additional Context (Optional)
+            <span className={styles.labelHint}>Provide specific details to guide the AI</span>
           </label>
-          <textarea
-            className={`${styles.textarea} ${styles.smallTextarea}`}
-            value={extra}
-            onChange={e => onChange({ ...settings, extra: e.target.value })}
-            placeholder="E.g. 'I'm transitioning from finance to tech' or 'I want to emphasize my startup experience' or 'The company just launched a product I admire - mention my excitement about it'"
-            rows={4}
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '500', marginBottom: '6px', color: 'var(--text-secondary)' }}>Are you pivoting careers?</div>
+              <input
+                type="text"
+                className={styles.refineInput} // reusing style
+                style={{ width: '100%' }}
+                value={pivotContext}
+                onChange={e => onChange({ ...settings, pivotContext: e.target.value })}
+                placeholder="E.g. Transitioning from Finance to Tech PM"
+              />
+            </div>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '500', marginBottom: '6px', color: 'var(--text-secondary)' }}>What's your #1 metric to highlight?</div>
+              <input
+                type="text"
+                className={styles.refineInput}
+                style={{ width: '100%' }}
+                value={metricContext}
+                onChange={e => onChange({ ...settings, metricContext: e.target.value })}
+                placeholder="E.g. Grew user base by 40% in 6 months"
+              />
+            </div>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '500', marginBottom: '6px', color: 'var(--text-secondary)' }}>Why this company specifically?</div>
+              <input
+                type="text"
+                className={styles.refineInput}
+                style={{ width: '100%' }}
+                value={companyContext}
+                onChange={e => onChange({ ...settings, companyContext: e.target.value })}
+                placeholder="E.g. I am a huge fan of your recent open-source launch"
+              />
+            </div>
+          </div>
         </div>
 
         <div className={styles.actions}>

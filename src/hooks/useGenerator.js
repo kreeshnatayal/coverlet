@@ -91,7 +91,11 @@ export function useGenerator() {
             if (letterMatch && letterMatch[1].trim().length > 0) {
               setOutputText(letterMatch[1].trim());
             } else {
-              const cleanedText = fullText.replace(/<SCORE>[\s\S]*?<\/SCORE>/i, '').replace(/<RATIONALE>[\s\S]*?<\/RATIONALE>/i, '').trim();
+              const cleanedText = fullText
+                .replace(/<ANALYSIS>[\s\S]*?(<\/ANALYSIS>|$)/i, '')
+                .replace(/<SCORE>[\s\S]*?<\/SCORE>/i, '')
+                .replace(/<RATIONALE>[\s\S]*?<\/RATIONALE>/i, '')
+                .trim();
               setOutputText(cleanedText || fullText);
             }
           } catch { /* skip parsing errors for chunks */ }
@@ -108,7 +112,7 @@ export function useGenerator() {
     }
   };
 
-  const generate = useCallback(async ({ resume, jobDesc, tone, focus, length, extra, model = 'llama-3.3-70b-versatile' }) => {
+  const generate = useCallback(async ({ resume, jobDesc, tone, focus, length, pivotContext, metricContext, companyContext, model = 'llama-3.3-70b-versatile' }) => {
     setStatus('loading');
     setOutputText('');
     setRationaleText('');
@@ -152,7 +156,7 @@ export function useGenerator() {
       }
 
       // 2. MAIN GENERATION
-      const prompt = buildPrompt({ resume, jobDesc, tone, focus, length, extra });
+      const prompt = buildPrompt({ resume, jobDesc, tone, focus, length, pivotContext, metricContext, companyContext });
       messagesRef.current = [{ role: 'user', content: prompt }];
       
       await streamResponse(stepTimers, model);

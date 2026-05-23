@@ -12,7 +12,9 @@ const DEFAULT_SETTINGS = {
   tone: 'professional',
   length: 'standard',
   focus: [],
-  extra: '',
+  pivotContext: '',
+  metricContext: '',
+  companyContext: '',
 };
 
 export default function Generator() {
