@@ -69,11 +69,15 @@ export default async function handler(req) {
 
     // Intelligent Waterfall Fallback Strategy
     const requestedModel = body.model || 'llama-3.3-70b-versatile';
+    
+    // We include the exact model strings based on Groq's standard naming conventions
     const fallbackModels = [
       requestedModel,
+      'llama-3.3-70b-versatile',
+      'llama-4-scout',
+      'gpt-oss-120b',
+      'qwen-3-32b',
       'llama-3.1-8b-instant',
-      'mixtral-8x7b-32768',
-      'gemma2-9b-it'
     ];
 
     // Remove duplicates just in case the requested model is already in the fallback list
@@ -104,14 +108,14 @@ export default async function handler(req) {
         break; // Success! Break out of the fallback loop
       }
 
-      if (response.status === 429) {
-        // Rate limit hit. Catch it and let the loop try the next model.
-        console.warn(`[Waterfall] Groq Rate Limit (429) hit for model ${model}. Falling back...`);
+      // If Rate Limit (429) OR Model Not Found (404), skip to the next model!
+      if (response.status === 429 || response.status === 404) {
+        console.warn(`[Waterfall] Skipping model ${model} (Status: ${response.status}). Falling back...`);
         lastError = response;
         continue; 
       }
 
-      // If it's a 400 Bad Request or something else, don't fallback, just return it.
+      // If it's a 400 Bad Request (e.g. prompt is too large) or something else, don't fallback, just return it.
       break; 
     }
 
