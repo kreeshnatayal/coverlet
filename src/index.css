@@ -1,0 +1,225 @@
+/* ═══════════════════════════════════════════════════════════════
+   CoverCraft AI — Global Design System
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-base:        #000000;
+  --bg-surface:     #0a0a0a;
+  --bg-card:        #111111;
+  --bg-card-hover:  #18181b;
+  --bg-glass:       rgba(255,255,255,0.03);
+  --bg-glass-hover: rgba(255,255,255,0.08);
+
+  --accent-amber:   #ffffff;
+  --accent-amber-l: #f4f4f5;
+  --accent-amber-d: #d4d4d8;
+  --accent-purple:  #3b82f6;
+  --accent-purple-l:#60a5fa;
+  
+  --text-primary:   #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted:     #71717a;
+
+  --border:         rgba(255,255,255,0.08);
+  --border-hover:   rgba(255,255,255,0.15);
+  --border-accent:  rgba(255,255,255,0.25);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+  --radius-full: 9999px;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  --font-main: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+
+  --transition-fast: 150ms ease;
+  --transition-mid:  250ms ease;
+  --transition-slow: 400ms cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: rgba(245,158,11,0.3); color: var(--text-primary); }
+a { color: inherit; text-decoration: none; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+@keyframes float-orb {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33%       { transform: translate(20px,-20px) scale(1.05); }
+  66%       { transform: translate(-15px,15px) scale(0.95); }
+}
+@keyframes pulse-amber {
+  0%, 100% { text-shadow: 0 0 8px rgba(245,158,11,0.4); }
+  50%       { text-shadow: 0 0 20px rgba(245,158,11,0.8); }
+}
+@keyframes pulse-green {
+  0%, 100% { opacity:1; transform:scale(1); }
+  50%       { opacity:0.7; transform:scale(1.3); }
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes slide-in {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes blink {
+  0%,100% { opacity:1; }
+  50%      { opacity:0; }
+}
+@keyframes spin-ring { to { transform: rotate(360deg); } }
+@keyframes pulse-orb {
+  0%,100% { transform:scale(1); box-shadow:0 0 0 0 rgba(245,158,11,0.4); }
+  50%      { transform:scale(1.2); box-shadow:0 0 0 12px rgba(245,158,11,0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Global Utility Components
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Section Badge (Amber Pill) */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+}
+
+/* Buttons */
+.btn-primary, .btn-ghost, .btn-ghost-sm, .btn-generate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-main);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-primary {
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--text-primary);
+  color: #000;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.btn-primary:hover {
+  background: #e4e4e7;
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-ghost {
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-hover);
+}
+
+.btn-ghost-sm {
+  font-weight: 500;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-ghost-sm:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.btn-generate {
+  font-weight: 500;
+  font-size: 15px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  background: var(--text-primary);
+  color: #000;
+  box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+}
+.btn-generate:hover {
+  background: #e4e4e7;
+  transform: translateY(-1px);
+}
+
+/* Ambient Background Elements */
+.bg-grid {
+  position: fixed; inset: 0; z-index: -2;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  pointer-events: none;
+}
+.orb {
+  position: fixed; z-index: -1;
+  border-radius: 50%; filter: blur(80px); opacity: 0.35;
+  animation: float-orb 8s ease-in-out infinite;
+  pointer-events: none;
+}
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, var(--accent-amber) 0%, transparent 70%);
+  top: -10%; left: -5%;
+}
+.orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%);
+  bottom: -10%; right: -5%;
+  animation-delay: -3s;
+}
+.orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+  top: 40%; right: 20%;
+  opacity: 0.2;
+  animation-delay: -6s;
+}
