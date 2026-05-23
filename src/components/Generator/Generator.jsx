@@ -5,6 +5,7 @@ import StepJobDescription from './StepJobDescription';
 import StepIntelligence from './StepIntelligence';
 import StepCustomize from './StepCustomize';
 import StepOutput from './StepOutput';
+import StepInterviewPrep from './StepInterviewPrep';
 import { useGenerator } from '../../hooks/useGenerator';
 import styles from './Generator.module.css';
 
@@ -19,18 +20,25 @@ const DEFAULT_SETTINGS = {
 };
 
 export default function Generator() {
-  const [step, setStep]       = useState(1);
-  const [resume, setResume]   = useState('');
-  const [jobDesc, setJobDesc] = useState('');
+  const [step, setStep]         = useState(1);
+  const [resume, setResume]     = useState('');
+  const [jobDesc, setJobDesc]   = useState('');
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
-  const { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, intelligenceData, generate, analyzeFit, refine, LOADING_STEPS } = useGenerator();
+  const {
+    status, outputText, rationaleText, matchScore,
+    errorMsg, loadingStep, intelligenceData,
+    interviewQuestions, interviewLoading,
+    generate, analyzeFit, generateInterviewPrep, refine, LOADING_STEPS,
+  } = useGenerator();
 
+  // Unlocking logic
   let highestUnlocked = 1;
   if (resume && resume.length >= 30) highestUnlocked = 2;
   if (highestUnlocked === 2 && jobDesc && jobDesc.length >= 30) highestUnlocked = 3;
   if (highestUnlocked === 3 && intelligenceData) highestUnlocked = 4;
   if (highestUnlocked === 4) highestUnlocked = 5;
+  if (highestUnlocked === 5 && outputText) highestUnlocked = 6;
 
   const handleAnalyzeFit = () => {
     setStep(3);
@@ -47,17 +55,33 @@ export default function Generator() {
     generate({ resume, jobDesc, ...settings });
   };
 
+  const handlePrepInterview = () => {
+    setStep(6);
+    generateInterviewPrep({
+      resume,
+      jobDesc,
+      rejectionRisk: intelligenceData?.rejectionRisk || '',
+    });
+  };
+
+  const handleDone = () => {
+    setStep(1);
+    setResume('');
+    setJobDesc('');
+    setSettings(DEFAULT_SETTINGS);
+  };
+
   return (
     <section className={styles.section} id="generate">
       <div className={styles.inner}>
-        <div className="section-badge" style={{ marginBottom: '20px' }}>AI Generator</div>
-        <h2 className={styles.sectionTitle}>Build your cover letter</h2>
-        <p className={styles.sectionSubtitle}>Follow the guided steps below - each tip helps the AI craft a more targeted letter.</p>
+        <div className="section-badge" style={{ marginBottom: '20px' }}>AI Copilot</div>
+        <h2 className={styles.sectionTitle}>Your Job Application Copilot</h2>
+        <p className={styles.sectionSubtitle}>Intelligence first. Strategy second. Generation last.</p>
 
-        <StepTracker 
-          currentStep={step} 
+        <StepTracker
+          currentStep={step}
           highestUnlocked={highestUnlocked}
-          onStepClick={setStep} 
+          onStepClick={setStep}
         />
 
         <div className={styles.stepsContainer}>
@@ -85,6 +109,15 @@ export default function Generator() {
               onRegenerate={handleRegenerate}
               onRefine={refine}
               onBack={() => setStep(4)}
+              onPrepInterview={handlePrepInterview}
+            />
+          )}
+          {step === 6 && (
+            <StepInterviewPrep
+              interviewQuestions={interviewQuestions}
+              interviewLoading={interviewLoading}
+              onBack={() => setStep(5)}
+              onDone={handleDone}
             />
           )}
         </div>

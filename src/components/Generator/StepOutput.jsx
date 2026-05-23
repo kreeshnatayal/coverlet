@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './StepPanel.module.css';
 
-export default function StepOutput({ status, outputText, rationaleText, matchScore, errorMsg, loadingStep, LOADING_STEPS, onRegenerate, onRefine, onBack }) {
+export default function StepOutput({ status, outputText, rationaleText, matchScore, errorMsg, loadingStep, LOADING_STEPS, onRegenerate, onRefine, onBack, onPrepInterview }) {
   const [copied, setCopied]     = useState(false);
   const [refineInput, setRefineInput] = useState('');
 
@@ -165,8 +165,14 @@ export default function StepOutput({ status, outputText, rationaleText, matchSco
             </div>
           </div>
           
-          <div className={styles.feedbackRow}>
+          <div className={styles.feedbackRow} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <button className="btn-ghost-sm" onClick={onBack}>Start Over</button>
+            {onPrepInterview && (
+              <button className="btn-primary" onClick={onPrepInterview} style={{ gap: '8px', display: 'inline-flex', alignItems: 'center' }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                Prep for Interview
+              </button>
+            )}
           </div>
         </div>
       )}

@@ -91,7 +91,7 @@ export function buildPromptPreview({ tone, focus, length, pivotContext, metricCo
 }
 
 export function buildIntelligencePrompt({ resume, jobDesc }) {
-  return `You are an elite Silicon Valley Tech Recruiter and Hiring Manager.
+  return `You are an elite Silicon Valley Tech Recruiter and Hiring Manager with 20 years of experience screening candidates at Google, Sequoia-backed startups, and top consulting firms.
 Analyze the provided resume against the job description. Do not sugarcoat. Be brutal, opinionated, and highly tactical.
 
 === RESUME ===
@@ -101,12 +101,41 @@ ${resume}
 ${jobDesc}
 
 === OUTPUT FORMAT ===
-Output ONLY valid JSON matching this exact schema:
+Output ONLY valid JSON matching this exact schema. No markdown, no backticks, no explanation:
 {
-  "archetype": "Short string classifying the candidate (e.g. Scrappy Operator, Analytical Systems Thinker)",
-  "hiddenExpectations": "1-2 sentences on what the JD secretly means (e.g. 'fast-paced' means chaotic)",
-  "strongFit": "1-2 sentences mapping the strongest resume proof to a core JD requirement",
-  "rejectionRisk": "1-2 sentences on the biggest brutal gap that will get them rejected",
-  "sixSecondImpression": "1 short sentence on what a recruiter notices first"
+  "archetype": "2-4 word label classifying the candidate's profile (e.g. 'Scrappy Operator', 'Analytical Systems Thinker', 'Early-Stage Generalist', 'Deep Technical Builder')",
+  "hiddenExpectations": "2-3 sentences decoding what the JD really means. Translate corporate buzzwords into actual day-to-day reality.",
+  "strongFit": "2-3 sentences identifying the single strongest evidence match between the resume and a core JD requirement. Be specific - cite actual resume content.",
+  "rejectionRisk": "2-3 sentences on the most critical gap that will cause rejection. Be blunt. Cite the specific JD requirement that is unmet.",
+  "sixSecondImpression": "Exactly 1 sharp sentence: what a recruiter's brain concludes in the first 6 seconds of scanning this resume for this role.",
+  "interviewProbability": <integer between 0 and 100 representing the realistic probability of getting an interview invite based on fit, gaps, and market competition>,
+  "probabilityReason": "1 sharp sentence explaining the score. Cite the single biggest factor - positive or negative - that drives this number."
+}`;
+}
+
+export function buildInterviewPrepPrompt({ resume, jobDesc, rejectionRisk }) {
+  return `You are a senior interview coach who has helped candidates land jobs at top companies.
+Based on the resume, job description, and the identified weakness below, generate exactly 5 high-probability interview questions this candidate will face.
+Focus on probing the gaps and verifying the strengths. Make the questions specific to THIS role, not generic.
+
+=== RESUME ===
+${resume}
+
+=== JOB DESCRIPTION ===
+${jobDesc}
+
+=== KNOWN CANDIDATE WEAKNESS ===
+${rejectionRisk}
+
+=== OUTPUT FORMAT ===
+Output ONLY valid JSON. No markdown, no backticks, no explanation:
+{
+  "questions": [
+    {
+      "question": "The exact interview question they will likely be asked",
+      "why": "1 sentence: why recruiters ask this for this specific role",
+      "hint": "2-3 sentences: concrete guidance on how to answer it well, tailored to this candidate's background"
+    }
+  ]
 }`;
 }

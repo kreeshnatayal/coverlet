@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { buildPrompt, buildIntelligencePrompt } from '../utils/promptBuilder';
+import { buildPrompt, buildIntelligencePrompt, buildInterviewPrepPrompt } from '../utils/promptBuilder';
 
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const API_URL = '/api/generate';
@@ -19,6 +19,8 @@ export function useGenerator() {
   const [errorMsg, setErrorMsg]       = useState('');
   const [loadingStep, setLoadingStep] = useState(0);     // 0–3
   const [intelligenceData, setIntelligenceData] = useState(null);
+  const [interviewQuestions, setInterviewQuestions] = useState(null);
+  const [interviewLoading, setInterviewLoading] = useState(false);
   
   // Maintain conversation history for iterative refinement
   const messagesRef = useRef([]);
@@ -159,6 +161,39 @@ export function useGenerator() {
     }
   }, []);
 
+  const generateInterviewPrep = useCallback(async ({ resume, jobDesc, rejectionRisk, model = 'llama-3.3-70b-versatile' }) => {
+    setInterviewLoading(true);
+    setInterviewQuestions(null);
+    try {
+      const prompt = buildInterviewPrepPrompt({ resume, jobDesc, rejectionRisk });
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.4,
+          max_tokens: 1500,
+          response_format: { type: 'json_object' },
+        }),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `API error ${response.status}`);
+      }
+      const data = await response.json();
+      let content = data?.choices?.[0]?.message?.content;
+      if (!content) throw new Error('No content received');
+      content = content.replace(/```json\s*/gi, '').replace(/```\s*$/gi, '').trim();
+      const parsed = JSON.parse(content);
+      setInterviewQuestions(parsed.questions || []);
+    } catch (err) {
+      setInterviewQuestions([]);
+    } finally {
+      setInterviewLoading(false);
+    }
+  }, []);
+
   const generate = useCallback(async ({ resume, jobDesc, tone, focus, length, pivotContext, metricContext, companyContext, model = 'llama-3.3-70b-versatile' }) => {
     setStatus('loading');
     setOutputText('');
@@ -225,5 +260,5 @@ export function useGenerator() {
     await streamResponse(null, 'llama-3.3-70b-versatile'); // Keep using the big model for refinement
   }, []);
 
-  return { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, intelligenceData, generate, analyzeFit, refine, LOADING_STEPS };
+  return { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, intelligenceData, interviewQuestions, interviewLoading, generate, analyzeFit, generateInterviewPrep, refine, LOADING_STEPS };
 }
