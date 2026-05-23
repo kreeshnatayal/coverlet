@@ -2,10 +2,12 @@
 export function buildPrompt({ resume, jobDesc, tone, focus, length, pivotContext, metricContext, companyContext }) {
   const lengthMap = { concise: '150-200', standard: '300-380', detailed: '450-520' };
   const toneMap = {
-    professional: 'formal, polished, and authoritative - suitable for corporate environments',
-    confident: 'bold, assertive, and self-assured - leading with confidence and impact',
-    conversational: 'warm, personable, and approachable - feels like a genuine conversation',
-    creative: 'unique, memorable, and slightly unconventional - designed to stand out',
+    yc_startup: 'highly action-biased, low fluff, fast-paced, focusing on velocity, shipping, and extreme ownership. Sound like a scrappy, relentless builder.',
+    big_tech_pm: 'framework-driven, analytical, scalable impact, structured thinking. Sound like you manage stakeholder chaos with data and clear roadmaps.',
+    founder_office: 'high ambiguity tolerance, generalist execution, ownership, "get things done" mindset. Sound like you can tackle anything thrown at you.',
+    consulting: 'highly structured, MECE (Mutually Exclusive, Collectively Exhaustive), client-facing, polished but deeply strategic.',
+    design_first: 'user-centric, highly empathetic, polished, focusing on craftsmanship, user journeys, and pixel-perfect execution.',
+    enterprise: 'risk-averse, team-oriented, highly formal and polished, focusing on compliance, scale, and cross-functional alignment.',
   };
 
   return `You are a world-class cover letter writer with 15 years of experience helping candidates land jobs at top companies. Your cover letters are known for being highly personalized, compelling, and strategically mapped to job requirements.
@@ -68,10 +70,12 @@ Generate your response now:`;
 export function buildPromptPreview({ tone, focus, length, pivotContext, metricContext, companyContext }) {
   const lengthMap = { concise: '~200 words', standard: '~350 words', detailed: '~500 words' };
   const toneMap = {
-    professional: 'formal and authoritative',
-    confident: 'bold and assertive',
-    conversational: 'warm and approachable',
-    creative: 'unique and memorable',
+    yc_startup: 'action-biased and fast-paced',
+    big_tech_pm: 'framework-driven and analytical',
+    founder_office: 'ambiguity-tolerant and ownership-driven',
+    consulting: 'highly structured and MECE',
+    design_first: 'user-centric and empathetic',
+    enterprise: 'risk-averse and highly polished',
   };
 
   let text = `You are an expert career coach and cover letter writer.\n\n`;
@@ -84,4 +88,25 @@ export function buildPromptPreview({ tone, focus, length, pivotContext, metricCo
   if (companyContext) text += `WHY THIS COMPANY: ${companyContext}\n`;
   text += `\nSTRUCTURE:\n1. Hook - open with a compelling statement\n2. Match - connect 2-3 specific achievements to JD requirements\n3. Why this company - show genuine interest\n4. Call to action - confident close\n\nINSTRUCTIONS:\n- Never use generic phrases like "I am writing to apply"\n- Mirror keywords from the job description naturally\n- Use active voice and concrete metrics where possible\n- Do NOT use bullet points in the letter`;
   return text;
+}
+
+export function buildIntelligencePrompt({ resume, jobDesc }) {
+  return `You are an elite Silicon Valley Tech Recruiter and Hiring Manager.
+Analyze the provided resume against the job description. Do not sugarcoat. Be brutal, opinionated, and highly tactical.
+
+=== RESUME ===
+${resume}
+
+=== JOB DESCRIPTION ===
+${jobDesc}
+
+=== OUTPUT FORMAT ===
+Output ONLY valid JSON matching this exact schema:
+{
+  "archetype": "Short string classifying the candidate (e.g. Scrappy Operator, Analytical Systems Thinker)",
+  "hiddenExpectations": "1-2 sentences on what the JD secretly means (e.g. 'fast-paced' means chaotic)",
+  "strongFit": "1-2 sentences mapping the strongest resume proof to a core JD requirement",
+  "rejectionRisk": "1-2 sentences on the biggest brutal gap that will get them rejected",
+  "sixSecondImpression": "1 short sentence on what a recruiter notices first"
+}`;
 }

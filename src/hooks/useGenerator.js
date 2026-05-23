@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { buildPrompt } from '../utils/promptBuilder';
+import { buildPrompt, buildIntelligencePrompt } from '../utils/promptBuilder';
 
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const API_URL = '/api/generate';
@@ -18,6 +18,7 @@ export function useGenerator() {
   const [matchScore, setMatchScore]   = useState(null);
   const [errorMsg, setErrorMsg]       = useState('');
   const [loadingStep, setLoadingStep] = useState(0);     // 0–3
+  const [intelligenceData, setIntelligenceData] = useState(null);
   
   // Maintain conversation history for iterative refinement
   const messagesRef = useRef([]);
@@ -112,6 +113,49 @@ export function useGenerator() {
     }
   };
 
+  const analyzeFit = useCallback(async ({ resume, jobDesc, model = 'llama-3.3-70b-versatile' }) => {
+    setStatus('loading');
+    setErrorMsg('');
+    setIntelligenceData(null);
+    setLoadingStep(0);
+    
+    try {
+      const prompt = buildIntelligencePrompt({ resume, jobDesc });
+      
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.2, // low temp for structured output
+          max_tokens: 1000,
+          response_format: { type: "json_object" } // Groq/OpenAI JSON mode
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `API error ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data?.choices?.[0]?.message?.content;
+      
+      if (!content) throw new Error("No content received");
+      
+      const parsed = JSON.parse(content);
+      setIntelligenceData(parsed);
+      setStatus('idle');
+      return parsed;
+
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg(err.message || 'Failed to analyze fit.');
+      throw err;
+    }
+  }, []);
+
   const generate = useCallback(async ({ resume, jobDesc, tone, focus, length, pivotContext, metricContext, companyContext, model = 'llama-3.3-70b-versatile' }) => {
     setStatus('loading');
     setOutputText('');
@@ -178,5 +222,5 @@ export function useGenerator() {
     await streamResponse(null, 'llama-3.3-70b-versatile'); // Keep using the big model for refinement
   }, []);
 
-  return { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, generate, refine, LOADING_STEPS };
+  return { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, intelligenceData, generate, analyzeFit, refine, LOADING_STEPS };
 }

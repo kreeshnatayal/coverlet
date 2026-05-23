@@ -2,6 +2,7 @@ import { useState } from 'react';
 import StepTracker from './StepTracker';
 import StepResume from './StepResume';
 import StepJobDescription from './StepJobDescription';
+import StepIntelligence from './StepIntelligence';
 import StepCustomize from './StepCustomize';
 import StepOutput from './StepOutput';
 import { useGenerator } from '../../hooks/useGenerator';
@@ -9,7 +10,7 @@ import styles from './Generator.module.css';
 
 const DEFAULT_SETTINGS = {
   model: 'llama-3.3-70b-versatile',
-  tone: 'professional',
+  tone: 'yc_startup',
   length: 'standard',
   focus: [],
   pivotContext: '',
@@ -23,16 +24,22 @@ export default function Generator() {
   const [jobDesc, setJobDesc] = useState('');
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
-  const { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, generate, refine, LOADING_STEPS } = useGenerator();
+  const { status, outputText, rationaleText, matchScore, errorMsg, loadingStep, intelligenceData, generate, analyzeFit, refine, LOADING_STEPS } = useGenerator();
 
   let highestUnlocked = 1;
   if (resume && resume.length >= 30) highestUnlocked = 2;
   if (highestUnlocked === 2 && jobDesc && jobDesc.length >= 30) highestUnlocked = 3;
-  if (highestUnlocked === 3) highestUnlocked = 4; // Settings are always valid
+  if (highestUnlocked === 3 && intelligenceData) highestUnlocked = 4;
+  if (highestUnlocked === 4) highestUnlocked = 5;
+
+  const handleAnalyzeFit = () => {
+    setStep(3);
+    analyzeFit({ resume, jobDesc }).catch(() => {});
+  };
 
   const handleGenerate = () => {
-    if (highestUnlocked < 3) return; // Fallback
-    setStep(4);
+    if (highestUnlocked < 4) return;
+    setStep(5);
     generate({ resume, jobDesc, ...settings });
   };
 
@@ -58,12 +65,15 @@ export default function Generator() {
             <StepResume resume={resume} onChange={setResume} onNext={() => setStep(2)} />
           )}
           {step === 2 && (
-            <StepJobDescription jobDesc={jobDesc} onChange={setJobDesc} onNext={() => setStep(3)} onBack={() => setStep(1)} />
+            <StepJobDescription jobDesc={jobDesc} onChange={setJobDesc} onNext={handleAnalyzeFit} onBack={() => setStep(1)} />
           )}
           {step === 3 && (
-            <StepCustomize settings={settings} onChange={setSettings} onBack={() => setStep(2)} onGenerate={handleGenerate} />
+            <StepIntelligence status={status} intelligenceData={intelligenceData} onBack={() => setStep(2)} onNext={() => setStep(4)} />
           )}
           {step === 4 && (
+            <StepCustomize settings={settings} onChange={setSettings} onBack={() => setStep(3)} onGenerate={handleGenerate} />
+          )}
+          {step === 5 && (
             <StepOutput
               status={status}
               outputText={outputText}
@@ -74,7 +84,7 @@ export default function Generator() {
               LOADING_STEPS={LOADING_STEPS}
               onRegenerate={handleRegenerate}
               onRefine={refine}
-              onBack={() => setStep(3)}
+              onBack={() => setStep(4)}
             />
           )}
         </div>

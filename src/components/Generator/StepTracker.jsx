@@ -1,9 +1,9 @@
 import styles from './StepTracker.module.css';
 
-const STEP_LABELS = ['Resume', 'Job Description', 'Customize', 'Generate'];
+const STEP_LABELS = ['Resume', 'Job Desc', 'Intelligence', 'Strategy', 'Output'];
 
 export default function StepTracker({ currentStep, highestUnlocked, onStepClick }) {
-  const fillPct = (currentStep / 4) * 100;
+  const fillPct = (currentStep / 5) * 100;
 
   return (
     <div className={styles.tracker}>

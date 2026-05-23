@@ -2,10 +2,12 @@ import { buildPromptPreview } from '../../utils/promptBuilder';
 import styles from './StepPanel.module.css';
 
 const TONES = [
-  { id: 'professional',   name: 'Professional',   desc: 'Formal, authoritative' },
-  { id: 'confident',      name: 'Confident',      desc: 'Bold, assertive' },
-  { id: 'conversational', name: 'Conversational', desc: 'Warm, approachable' },
-  { id: 'creative',       name: 'Creative',       desc: 'Unique, memorable' },
+  { id: 'yc_startup',     name: 'YC Startup',     desc: 'Action-biased, low fluff, velocity' },
+  { id: 'big_tech_pm',    name: 'Big Tech PM',    desc: 'Frameworks, scalable, analytical' },
+  { id: 'founder_office', name: 'Founder Office', desc: 'Ambiguity tolerance, ownership' },
+  { id: 'consulting',     name: 'Consulting',     desc: 'Structured, MECE, client-facing' },
+  { id: 'design_first',   name: 'Design-First',   desc: 'User-centric, empathy, polished' },
+  { id: 'enterprise',     name: 'Enterprise',     desc: 'Risk-averse, team-oriented, formal' },
 ];
 
 const LENGTHS = [
